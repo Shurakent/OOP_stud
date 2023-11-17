@@ -1,4 +1,4 @@
-package my.data;
+package my.schedule.data;
 
 public class Proffesor {
 }
