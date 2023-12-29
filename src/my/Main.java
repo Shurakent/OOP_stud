@@ -1,47 +1,62 @@
 package my;
 
-import java.time.DayOfWeek;
-import java.time.LocalTime;
-import java.util.List;
-
 import my.schedule.Schedule;
-import my.schedule.data.Course;
-import my.schedule.data.Lesson;
+import my.schedule.ScheduleInterface;
+import my.schedule.data.course.Course;
+import my.schedule.data.course.CourseInterface;
+import my.schedule.data.group.Group;
+import my.schedule.data.group.GroupInterface;
+import my.schedule.data.student.Student;
+import my.schedule.data.student.StudentInterface;
+import my.schedule.data.subject.Subject;
+import my.schedule.data.subject.SubjectInterface;
+
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        Schedule schedule = new Schedule();
+        // Создаем студентов
+        Student student1 = new Student("Иван", "Иванов", 1);
+        Student student2 = new Student("Петр", "Петров", 2);
 
-        Course mathCourse = new Course("Math");
-        Course physicsCourse = new Course("Physics");
+        // Создаем курсы и добавляем предметы
+        Course course1 = new Course("Первый курс", 101);
+        Course course2 = new Course("Второй курс", 102);
 
-        Lesson mathLesson1 = new Lesson(DayOfWeek.MONDAY, LocalTime.of(9, 0), LocalTime.of(10, 30), "101");
-        Lesson mathLesson2 = new Lesson(DayOfWeek.WEDNESDAY, LocalTime.of(9, 0), LocalTime.of(10, 30), "102");
+        Subject subject1 = new Subject("Линейная алгебра", "Проф. Иванов", 201);
+        Subject subject2 = new Subject("Механика", "Проф. Петров", 202);
 
-        Lesson physicsLesson1 = new Lesson(DayOfWeek.TUESDAY, LocalTime.of(13, 0), LocalTime.of(14, 30), "201");
+        course1.addSubject(subject1);
+        course2.addSubject(subject2);
 
-        mathCourse.addLesson(mathLesson1);
-        mathCourse.addLesson(mathLesson2);
+        // Создаем группу и добавляем студентов и курсы
+        List<Student> students = List.of(student1, student2);
+        List<Course> courses = List.of(course1, course2);
 
-        physicsCourse.addLesson(physicsLesson1);
+        Group group = new Group("Группа 1", students, courses);
 
-        schedule.addCourse(mathCourse);
-        schedule.addCourse(physicsCourse);
+        // Создаем расписание и добавляем предмет
+        Schedule schedule = new Schedule(group, "Понедельник", "10:00", "12:00", subject1);
 
-        schedule.addLesson(mathCourse, mathLesson1);
-        schedule.addLesson(mathCourse, mathLesson2);
-        schedule.addLesson(physicsCourse, physicsLesson1);
+        // Демонстрация использования интерфейсов
+        displayInfo(student1);
+        displayInfo(course1);
+        displayInfo(group);
+        displayInfo(subject1);
+        displayInfo(schedule);
+    }
 
-        System.out.println("Math Course Schedule:");
-        List<Lesson> mathSchedule = schedule.getScheduleForCourse(mathCourse);
-        for (Lesson lesson : mathSchedule) {
-            System.out.println(lesson);
-        }
-
-        System.out.println("\nPhysics Course Schedule:");
-        List<Lesson> physicsSchedule = schedule.getScheduleForCourse(physicsCourse);
-        for (Lesson lesson : physicsSchedule) {
-            System.out.println(lesson);
+    private static void displayInfo(Object obj) {
+        if (obj instanceof StudentInterface) {
+            ((StudentInterface) obj).displayStudentInfo();
+        } else if (obj instanceof CourseInterface) {
+            ((CourseInterface) obj).displayCourseInfo();
+        } else if (obj instanceof GroupInterface) {
+            ((GroupInterface) obj).displayGroupInfo();
+        } else if (obj instanceof SubjectInterface) {
+            ((SubjectInterface) obj).displaySubjectInfo();
+        } else if (obj instanceof ScheduleInterface) {
+            ((ScheduleInterface) obj).displayScheduleInfo();
         }
     }
 }
